@@ -16,8 +16,8 @@ intf1, status1, speed1 = "Gi0/0", "up", "1G"
 intf2, status2, speed2 = "Gi0/1", "down", "1G"
 intf3, status3, speed3 = "Gi0/2", "up", "10G"
 
-print("{:<6} {:<4} {:<4}".format("接口", "状态", "速率"))
+print("{:<7} {:<5} {:<4}".format("接口", "状态", "速率"))
 print("-" * 20)
-print("{:<8} {:<6} {:<4}".format(intf1, status1, speed1))
-print("{:<8} {:<6} {:<4}".format(intf2, status2, speed2))
-print("{:<8} {:<6} {:<4}".format(intf3, status3, speed3))
+print("{:<9} {:<7} {:<4}".format(intf1, status1, speed1))
+print("{:<9} {:<7} {:<4}".format(intf2, status2, speed2))
+print("{:<9} {:<7} {:<4}".format(intf3, status3, speed3))
