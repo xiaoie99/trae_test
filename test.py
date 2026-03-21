@@ -1,4 +1,1 @@
-import os
-print(os.getenv("TESTPASS"))
-print("hello world")
-print("hello world12")
+print("p\n\ryt\nho\tn")
