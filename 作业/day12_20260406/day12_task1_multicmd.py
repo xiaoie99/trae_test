@@ -14,21 +14,21 @@ def qytang_multicmd(ip, username, password, cmd_list, enable='', wait_time=2, ve
                 timeout=5, look_for_keys=False, allow_agent=False)
     chan = ssh.invoke_shell()
     time.sleep(1)
-    chan.recv(4096)  # 清空欢迎信息
+    chan.recv(65535)  # 清空欢迎信息
     # 如果需要 enable
     if enable:
         chan.send(b'enable\n')
         time.sleep(1)
         chan.send(enable.encode() + b'\n')
         time.sleep(1)
-        chan.recv(4096)
+        chan.recv(65535)
     results = []
     for cmd in cmd_list:
         if verbose:
             print(f"\n--- {cmd} ---")
         chan.send(cmd.encode() + b'\n')
         time.sleep(wait_time)
-        output = chan.recv(4096).decode()
+        output = chan.recv(65535).decode()
         if verbose:
             print(output)
         results.append(output)
