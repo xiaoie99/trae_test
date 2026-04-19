@@ -106,8 +106,4 @@ if __name__ == "__main__":
     # 验证数据库文件
     verify_database_file()
     print("\n" + "=" * 60)
-    print("任务三完成!")
-    print("期望输出验证:")
-    print("$ python3 day4_1_create_db.py")
-    print("$ ls *.db")
-    print("sqlalchemy_syslog_sqlite3.db")
+    print("数据库创建完成!")

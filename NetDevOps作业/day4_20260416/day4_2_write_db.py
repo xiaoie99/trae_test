@@ -142,9 +142,6 @@ if __name__ == "__main__":
     print("\n" + "=" * 60)
     if result > 0:
         print("任务四完成! 数据已成功写入数据库。")
-        print("\nCrond配置提示:")
-        print("# 每分钟执行一次 SNMP 采集写库")
-        print("* * * * * root python3 /python_basic/NetDevOps作业/day4_20260416/day4_2_write_db.py")
     else:
         print("任务四失败! 请检查设备连接和SNMP配置。")
     print("=" * 60)

@@ -87,14 +87,14 @@ def generate_cpu_chart(device_data):
             lines_data.append([
                 data['time_list'],
                 data['cpu_list'],
-                f"{device_ip} CPU"
+                f"{device_ip}"
             ])
     if lines_data:
         # 生成CPU利用率趋势图
         bokeh_line(
             lines_data=lines_data,
             title='CPU利用率趋势',
-            y_label='CPU利用率 (%)'
+            y_label='利用率 (%)'
         )
         return True
     return False
@@ -106,14 +106,14 @@ def generate_memory_chart(device_data):
             lines_data.append([
                 data['time_list'],
                 data['mem_util_list'],
-                f"{device_ip} 内存"
+                f"{device_ip}"
             ])
     if lines_data:
         # 生成内存利用率趋势图
         bokeh_line(
             lines_data=lines_data,
             title='内存利用率趋势',
-            y_label='内存利用率 (%)'
+            y_label='利用率 (%)'
         )
         return True
     return False
