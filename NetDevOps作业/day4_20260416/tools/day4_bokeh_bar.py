@@ -50,17 +50,17 @@ if __name__ == "__main__":
     print("任务一: 使用 Bokeh 绘制设备性能柱状图")
     print("=" * 50)
     
-    # 生成过去2小时内的CPU利用率数据，每10分钟一个数据点
+    # 生成过去10分钟内的CPU利用率数据，每1分钟一个数据点
     time_list = []
     value_list = []
     
-    # 从当前时间往前推2小时
+    # 从当前时间往前推10分钟
     base_time = datetime.now()
     
-    # 生成13个数据点（2小时，每10分钟一个）
-    for i in range(13):
+    # 生成10个数据点（10分钟，每1分钟一个）
+    for i in range(10):
         # 计算时间点
-        time_point = base_time - timedelta(minutes=10 * (12 - i))
+        time_point = base_time - timedelta(minutes=1 * (9 - i))
         time_list.append(time_point)
         
         # 生成随机CPU利用率（20%-90%之间，模拟真实波动）
@@ -80,8 +80,8 @@ if __name__ == "__main__":
     # 通过修改save_name参数来确保输出到正确目录，而不修改函数本身
     save_name = str(OUTPUTS_DIR / 'cpu_utilization_bar.html')
     
-    bokeh_bar(time_list, value_list, 'CPU利用率', 
-               title='设备CPU利用率监控', y_label='CPU利用率 (%)', 
+    bokeh_bar(time_list, value_list, 'R1 CPU', 
+               title='CPU利用率柱状图测试', y_label='利用率 (%)', 
                save_name=save_name)
     
     print("\n" + "=" * 50)
