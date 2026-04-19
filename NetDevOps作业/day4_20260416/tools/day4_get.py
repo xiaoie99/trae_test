@@ -5,15 +5,11 @@
 # 亁颐堂官网www.qytang.com
 # 教主VIP, 让我们聊点高级的
 # https://vip.qytang.com/
-
 # ~~~~~~~~~~~~~~~~注意版本~~~~~~~~~~~~~
 # pyasn1==0.6.1    # ~~~更新时间2025/2/23
 # pysnmp==7.1.16   # ~~~更新时间2025/2/23
-
 import asyncio
 from pysnmp.hlapi.v3arch.asyncio import *
-
-
 async def snmpv2_get(ip, community, oid, port=161):
     # 使用 get_cmd 执行 SNMP GET 操作
     error_indication, error_status, error_index, var_binds = await get_cmd(
@@ -23,7 +19,6 @@ async def snmpv2_get(ip, community, oid, port=161):
         ContextData(),
         ObjectType(ObjectIdentity(oid))  # 读取的 OID
     )
-
     # 错误处理
     if error_indication:
         print(error_indication)
@@ -41,12 +36,10 @@ async def snmpv2_get(ip, community, oid, port=161):
             result_str = str(value)
         # 返回 OID 和解码后的字符串结果
         return var_bind[0].prettyPrint(), result_str
-
 if __name__ == "__main__":
     # ip 地址与 snmp community 字符串
     ip_address = "10.10.1.200"
     community = "qytangro"
-
     # 系统描述
     print(asyncio.run(snmpv2_get(ip_address, community, "1.3.6.1.2.1.1.1.0", port=161)))
     # 联系人
