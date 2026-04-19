@@ -10,37 +10,17 @@ import os
 from datetime import datetime
 # 添加项目路径，确保模块导入正确
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-# 自动处理Python环境问题（兼容原始Crond配置）
-def auto_fix_python_environment():
-    """自动处理Python环境，确保依赖包可用"""
-    try:
-        # 尝试导入必要的包
-        from sqlalchemy import create_engine
-        from sqlalchemy.orm import sessionmaker
-        return True  # 环境正常
-    except ImportError:
-        # 环境异常，尝试自动修复
-        print("[*] 检测到Python环境问题，尝试自动修复...")
-        # 检查是否在虚拟环境中
-        venv_path = '/python_basic/.venv'
-        if os.path.exists(venv_path):
-            # 尝试重新执行脚本使用虚拟环境Python
-            venv_python = os.path.join(venv_path, 'bin', 'python')
-            script_path = os.path.abspath(__file__)
-            if os.path.exists(venv_python):
-                print(f"[*] 重新执行脚本使用虚拟环境: {venv_python}")
-                os.execl(venv_python, venv_python, script_path)
-            else:
-                print("[!] 虚拟环境Python不存在，请手动配置环境")
-                return False
-        else:
-            print("[!] 虚拟环境不存在，请安装依赖包或配置虚拟环境")
-            return False
-    return False
-# 在导入其他模块之前先检查环境
-if not auto_fix_python_environment():
-    sys.exit(1)
-# 现在安全导入依赖包
+# 检查是否已经在虚拟环境中运行
+venv_path = '/python_basic/.venv'
+venv_python = os.path.join(venv_path, 'bin', 'python')
+current_python = sys.executable
+
+# 如果不是虚拟环境Python，切换到虚拟环境
+if current_python != venv_python and os.path.exists(venv_python):
+    script_path = os.path.abspath(__file__)
+    os.execl(venv_python, venv_python, script_path)
+
+# 如果已经在虚拟环境中或虚拟环境不存在，继续执行
 from tools.day4_get import snmpv2_get
 from day4_1_create_db import RouterMonitor, create_engine
 from sqlalchemy.orm import sessionmaker
