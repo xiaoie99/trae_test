@@ -13,7 +13,6 @@ services:
     networks:
       - qyt_net
     restart: always
-
   qyt-grafana:
     image: "grafana/grafana:7.5.11"
     user: root
@@ -24,7 +23,6 @@ services:
     networks:
       - qyt_net
     restart: always
-
 networks:
   qyt_net:
     driver: bridge
