@@ -1,0 +1,8 @@
+--- ./pyats_files/ospf_nei_snapshot/C8Kv2_show-ip-ospf-nei_parsed.txt
++++ ./pyats_files/netdevops_ospf_nei_snapshot/C8Kv2_show-ip-ospf-nei_parsed.txt
+ interfaces:
+  GigabitEthernet2:
+   neighbors:
+    1.1.1.1:
+-    state: FULL/DR
++    state: FULL/BDR

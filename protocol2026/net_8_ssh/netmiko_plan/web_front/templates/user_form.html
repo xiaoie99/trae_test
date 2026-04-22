@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% from "form_helper.html" import render_field %}
+
+{% block title %}{% if user %}编辑{% else %}添加{% endif %}用户 - {{ router.routername }} - 亁颐堂NetDevOps管理平台{% endblock %}
+
+{% block page_title %}
+    {% if user %}编辑{% else %}添加{% endif %}用户 - {{ router.routername }}
+    <a href="{{ url_for('users.users', router_id=router.id) }}" class="btn btn-sm btn-outline-secondary float-end">
+        <i class="fa-solid fa-arrow-left"></i> 返回用户列表
+    </a>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" class="needs-validation" novalidate>
+                    {{ form.csrf_token }}
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ render_field(form.username) }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ render_field(form.priv) }}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{ render_field(form.password) }}
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="{{ url_for('users.users', router_id=router.id) }}" class="btn btn-secondary">
+                            <i class="fa-solid fa-times me-2"></i>取消
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa-solid fa-save me-2"></i>保存
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // 表单验证
+    (function() {
+        'use strict';
+        const forms = document.querySelectorAll('.needs-validation');
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    })();
+</script>
+{% endblock %} 

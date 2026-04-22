@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}首页 - 亁颐堂NetDevOps管理平台{% endblock %}
+
+{% block page_title %}系统概况{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card border-primary h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">
+                    <i class="fa-solid fa-router fa-2x mb-3 text-primary"></i>
+                    <br>路由器
+                </h5>
+                <p class="card-text display-5">{{ routers_count }}</p>
+                <a href="{{ url_for('routers.routers') }}" class="btn btn-sm btn-outline-primary">管理路由器</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card border-success h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">
+                    <i class="fa-solid fa-network-wired fa-2x mb-3 text-success"></i>
+                    <br>接口
+                </h5>
+                <p class="card-text display-5">{{ interfaces_count }}</p>
+                {% if routers_count > 0 %}
+                <a href="{{ url_for('routers.routers') }}" class="btn btn-sm btn-outline-success">查看路由器</a>
+                {% else %}
+                <button class="btn btn-sm btn-outline-secondary" disabled>请先添加路由器</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card border-info h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">
+                    <i class="fa-solid fa-diagram-project fa-2x mb-3 text-info"></i>
+                    <br>OSPF配置
+                </h5>
+                <p class="card-text display-5">{{ ospf_count }}</p>
+                {% if routers_count > 0 %}
+                <a href="{{ url_for('routers.routers') }}" class="btn btn-sm btn-outline-info">查看路由器</a>
+                {% else %}
+                <button class="btn btn-sm btn-outline-secondary" disabled>请先添加路由器</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-4 mb-4">
+        <div class="card border-danger h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">
+                    <i class="fa-solid fa-user-shield fa-2x mb-3 text-danger"></i>
+                    <br>用户账号
+                </h5>
+                <p class="card-text display-5">{{ users_count }}</p>
+                {% if routers_count > 0 %}
+                <a href="{{ url_for('routers.routers') }}" class="btn btn-sm btn-outline-danger">查看路由器</a>
+                {% else %}
+                <button class="btn btn-sm btn-outline-secondary" disabled>请先添加路由器</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card border-warning h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">
+                    <i class="fa-solid fa-key fa-2x mb-3 text-warning"></i>
+                    <br>登录凭证
+                </h5>
+                <p class="card-text display-5">{{ credentials_count }}</p>
+                <a href="{{ url_for('credentials.credentials') }}" class="btn btn-sm btn-outline-warning">管理凭证</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card border-dark h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">
+                    <i class="fa-solid fa-microchip fa-2x mb-3 text-dark"></i>
+                    <br>设备类型
+                </h5>
+                <p class="card-text display-5">{{ devicetypes_count }}</p>
+                <a href="{{ url_for('devicetypes.devicetypes') }}" class="btn btn-sm btn-outline-dark">管理设备类型</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                快速指南
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">开始使用本系统</h5>
+                <p class="card-text">请按照以下步骤配置您的网络设备：</p>
+                <ol>
+                    <li>添加<a href="{{ url_for('devicetypes.devicetypes') }}">设备类型</a>，例如：cisco_ios, juniper_junos</li>
+                    <li>添加<a href="{{ url_for('credentials.credentials') }}">登录凭证</a>，用于连接您的网络设备</li>
+                    <li>添加<a href="{{ url_for('routers.routers') }}">路由器</a>，并关联相应的设备类型和登录凭证</li>
+                    <li>为路由器配置接口、用户账号和OSPF路由</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

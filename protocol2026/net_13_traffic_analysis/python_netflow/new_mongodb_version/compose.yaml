@@ -1,0 +1,47 @@
+services:
+  mongodb:
+    image: mongo:6.0.14
+    container_name: netflow-mongodb
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_DATABASE=netflowdb
+    # volumes:
+    #   - ./mongo_data:/data/db
+    ports:
+      - "27017:27017"
+
+  netflow:
+    build: .
+    container_name: netflow-server
+    restart: unless-stopped
+    environment:
+      - NETFLOW_HOST=0.0.0.0
+      - NETFLOW_PORT=2055
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - MONGO_DB=netflowdb
+      - MONGO_COLLECTION=flows
+    depends_on:
+      - mongodb
+    ports:
+      - "2055:2055/udp"
+
+  reporter:
+    build: .
+    container_name: netflow-reporter
+    restart: unless-stopped
+    environment:
+      - REPORT_HOST=0.0.0.0
+      - REPORT_PORT=8080
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - MONGO_DB=netflowdb
+      - MONGO_COLLECTION=flows
+    command: ["python", "reporter_app.py"]
+    depends_on:
+      - mongodb
+    ports:
+      - "8080:8080"
+
+volumes:
+  mongo_data:

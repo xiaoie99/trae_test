@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}亁颐堂NetDevOps管理平台{% endblock %}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: 100vh;
+            background-color: #f8f9fa;
+            padding: 20px 0;
+            position: fixed;
+            z-index: 100;
+        }
+        .main-content {
+            margin-left: 260px;
+            padding: 20px;
+            overflow: visible !important;
+        }
+        .nav-item {
+            margin-bottom: 5px;
+        }
+        .nav-link {
+            color: #495057;
+            border-radius: 5px;
+            padding: 10px 20px;
+        }
+        .nav-link:hover {
+            background-color: #e9ecef;
+        }
+        .nav-link.active {
+            background-color: #0d6efd;
+            color: #fff;
+        }
+        .sidebar-heading {
+            padding: 10px 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #6c757d;
+            font-size: 0.8rem;
+        }
+        /* 修复下拉菜单样式 */
+        .table-responsive {
+            overflow: visible !important;
+        }
+        .table td {
+            position: relative !important;
+            overflow: visible !important;
+            padding: 1rem 0.75rem !important;  /* 增加单元格内边距 */
+            vertical-align: middle !important;
+        }
+        .table td:last-child {
+            min-height: 60px !important;  /* 确保操作列有足够的高度 */
+            min-width: 120px !important;  /* 确保操作列有足够的宽度 */
+        }
+        .dropdown-menu {
+            max-height: none !important;
+            overflow: visible !important;
+            position: absolute !important;
+            z-index: 9999 !important;
+            padding: 0.5rem 0 !important;
+        }
+        .table .btn-group {
+            position: relative !important;
+            display: inline-flex !important;
+            vertical-align: middle !important;
+        }
+        .table .dropdown-menu {
+            position: absolute !important;
+            top: calc(100% + 5px) !important;  /* 稍微往下移动一点 */
+            right: 0 !important;
+            left: auto !important;
+            margin-top: 2px !important;
+            min-width: 200px !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;  /* 添加阴影效果 */
+        }
+        .dropdown-item {
+            padding: 0.5rem 1rem !important;  /* 增加菜单项的内边距 */
+        }
+        .bg-white {
+            overflow: visible !important;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                position: static;
+                height: auto;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% if 'logged_in' in session %}
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边导航栏 -->
+            <div class="col-md-3 col-xl-2 sidebar">
+                <div class="d-flex flex-column">
+                    <h1 class="text-center my-4">
+                        <span class="fw-bold text-primary">NetDevOps</span>
+                    </h1>
+                    
+                    <div class="sidebar-heading">主要功能</div>
+                    <ul class="nav flex-column mb-4">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{{ url_for('main.index') }}">
+                                <i class="fa-solid fa-house me-2"></i>首页
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if '/routers' in request.path and not '/interfaces' in request.path and not '/users' in request.path and not '/ospf' in request.path %}active{% endif %}" href="{{ url_for('routers.routers') }}">
+                                <i class="fa-solid fa-router me-2"></i>路由器管理
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <div class="sidebar-heading">基础配置</div>
+                    <ul class="nav flex-column mb-4">
+                        <li class="nav-item">
+                            <a class="nav-link {% if '/devicetypes' in request.path %}active{% endif %}" href="{{ url_for('devicetypes.devicetypes') }}">
+                                <i class="fa-solid fa-microchip me-2"></i>设备类型
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if '/credentials' in request.path %}active{% endif %}" href="{{ url_for('credentials.credentials') }}">
+                                <i class="fa-solid fa-key me-2"></i>登录凭证
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <div class="mt-auto">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('auth.logout') }}">
+                                    <i class="fa-solid fa-sign-out-alt me-2"></i>登出
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 主要内容区域 -->
+            <div class="col-md-9 col-xl-10 main-content">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <div class="bg-white rounded shadow-sm p-4 mb-4">
+                    <h2 class="border-bottom pb-2 mb-4">{% block page_title %}页面标题{% endblock %}</h2>
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- 登录页没有导航栏 -->
+    <div class="container mt-5">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block login_content %}{% endblock %}
+    </div>
+    {% endif %}
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 设置所有表单错误消息的样式
+        document.addEventListener('DOMContentLoaded', function() {
+            const errorSpans = document.querySelectorAll('.invalid-feedback');
+            errorSpans.forEach(span => {
+                span.parentElement.querySelector('input, select, textarea').classList.add('is-invalid');
+            });
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - 亁颐堂NetDevOps管理平台{% endblock %}
+
+{% block page_title %}
+    {{ title }}
+    <a href="{{ url_for('devicetypes.devicetypes') }}" class="btn btn-sm btn-outline-secondary float-end">
+        <i class="fa-solid fa-arrow-left"></i> 返回列表
+    </a>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <form method="POST">
+            {{ form.csrf_token }}
+            
+            <div class="mb-3">
+                <label for="device_type" class="form-label">设备类型</label>
+                {{ form.device_type(class="form-control", placeholder="例如: cisco_ios") }}
+                {% for error in form.device_type.errors %}
+                    <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+                <div class="form-text">请输入Netmiko支持的设备类型名称</div>
+            </div>
+            
+            <div class="d-grid gap-2">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </form>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                常见设备类型参考
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>cisco_ios</strong>
+                        <small class="text-muted d-block">Cisco IOS设备</small>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>cisco_nxos</strong>
+                        <small class="text-muted d-block">Cisco Nexus设备</small>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>juniper_junos</strong>
+                        <small class="text-muted d-block">Juniper Junos设备</small>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>arista_eos</strong>
+                        <small class="text-muted d-block">Arista EOS设备</small>
+                    </li>
+                    <li class="list-group-item">
+                        <strong>huawei</strong>
+                        <small class="text-muted d-block">华为设备</small>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
