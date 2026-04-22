@@ -49,3 +49,4 @@ dmypy.json
 *.pot
 
 .ipynb_checkpoints/
+/protocol2026/
