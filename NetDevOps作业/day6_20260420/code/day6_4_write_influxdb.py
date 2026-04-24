@@ -3,17 +3,13 @@
 import datetime
 import os
 import sys
-
 from influxdb import InfluxDBClient
-
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from code.tools.day6_snmp_get_all import snmpv2_get_all
-
 DEVICES = [
     {"ip": "10.10.1.200", "community": "qytangro", "port": 161},
     {"ip": "10.10.1.201", "community": "qytangro", "port": 161},
 ]
-
 INFLUX_CONFIG = {
     "host": "127.0.0.1",
     "port": 8086,
@@ -22,8 +18,6 @@ INFLUX_CONFIG = {
     "database": "qytdb",
     "measurement": "interface_monitor",
 }
-
-
 def write_once():
     client = InfluxDBClient(
         host=INFLUX_CONFIG["host"],
@@ -33,7 +27,6 @@ def write_once():
         database=INFLUX_CONFIG["database"],
     )
     now = datetime.datetime.now(datetime.UTC).isoformat("T")
-
     payload = []
     for device in DEVICES:
         result = snmpv2_get_all(device["ip"], device["community"], device.get("port", 161))
@@ -54,11 +47,8 @@ def write_once():
                 f"[+] {result['device_ip']} {if_info['interface_name']:<30} "
                 f"IN={if_info['in_bytes']:>12}  OUT={if_info['out_bytes']:>12}"
             )
-
     if payload:
         client.write_points(payload)
     print(f"[*] 共写入 {len(payload)} 条记录")
-
-
 if __name__ == "__main__":
     write_once()

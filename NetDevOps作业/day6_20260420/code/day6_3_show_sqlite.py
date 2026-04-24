@@ -3,17 +3,12 @@
 import os
 import sys
 from datetime import datetime, timedelta
-
 import numpy as np
 from sqlalchemy.orm import sessionmaker
-
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from code.day6_1_create_db import InternfaceMonitor, engine
 from code.tools.day6_bokeh_line import bokeh_line
-
 Session = sessionmaker(bind=engine)
-
-
 def show_speed_from_db(minutes=10):
     """从 SQLite 读取最近 N 分钟数据, 用 Numpy 向量化计算速率, Bokeh 出图。"""
     session = Session()
@@ -65,6 +60,5 @@ def show_speed_from_db(minutes=10):
         bokeh_line(in_speed_lines, title='接口入向速率 (RX)')
     if out_speed_lines:
         bokeh_line(out_speed_lines, title='接口出向速率 (TX)')
-
 if __name__ == "__main__":
     show_speed_from_db(minutes=10)

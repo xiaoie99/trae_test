@@ -2,21 +2,15 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-
 from sqlalchemy.orm import sessionmaker
-
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from code.day6_1_create_db import InternfaceMonitor, engine
 from code.tools.day6_snmp_get_all import snmpv2_get_all
-
 Session = sessionmaker(bind=engine)
-
 DEVICES = [
     {"ip": "10.10.1.200", "community": "qytangro", "port": 161},
     {"ip": "10.10.1.201", "community": "qytangro", "port": 161},
 ]
-
-
 def write_once():
     session = Session()
     total = 0
@@ -40,7 +34,5 @@ def write_once():
         print(f"[*] 共写入 {total} 条记录")
     finally:
         session.close()
-
-
 if __name__ == "__main__":
     write_once()
