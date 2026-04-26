@@ -5,10 +5,13 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 import datetime
+# 东八区时区
 tzutc_8 = datetime.timezone(datetime.timedelta(hours=8))
+# 连接本机 PostgreSQL 容器
 engine = create_engine('postgresql+psycopg2://qytangdbuser:Cisc0123@127.0.0.1/qytangdb')
 Base = declarative_base()
 class Router(Base):
+    """路由器主表"""
     __tablename__ = 'router'
     id = Column(Integer, primary_key=True)
     router_name = Column(String(64), nullable=False, index=True)
@@ -22,6 +25,7 @@ class Router(Base):
     def __repr__(self):
         return f"{self.__class__.__name__}({self.router_name})"
 class DeviceConfig(Base):
+    """设备配置备份表"""
     __tablename__ = 'device_config'
     id = Column(Integer, primary_key=True)
     router_id = Column(Integer, ForeignKey("router.id", ondelete='CASCADE'), nullable=False)
@@ -32,6 +36,7 @@ class DeviceConfig(Base):
     def __repr__(self):
         return f"{self.__class__.__name__}(Device IP: {self.router.ip} | Datetime: {self.record_time} | Config MD5: {self.config_md5})"
 class Interface(Base):
+    """路由器接口表"""
     __tablename__ = 'interface'
     id = Column(Integer, primary_key=True)
     router_id = Column(Integer, ForeignKey("router.id", ondelete='CASCADE'), nullable=False)
@@ -42,6 +47,7 @@ class Interface(Base):
     def __repr__(self):
         return f"{self.__class__.__name__}(Router: {self.router.router_name} | Interface_name: {self.interface_name} | IP: {self.ip} / {self.mask})"
 class OSPFProcess(Base):
+    """OSPF 进程表（与 Router 一对一）"""
     __tablename__ = 'ospf_process'
     id = Column(Integer, primary_key=True)
     router_id = Column(Integer, ForeignKey("router.id", ondelete='CASCADE'), nullable=False)
@@ -52,6 +58,7 @@ class OSPFProcess(Base):
     def __repr__(self):
         return f"{self.__class__.__name__}(Router: {self.router.router_name} | Process: {self.processid})"
 class Area(Base):
+    """OSPF 区域表"""
     __tablename__ = 'area'
     id = Column(Integer, primary_key=True)
     ospfprocess_id = Column(Integer, ForeignKey("ospf_process.id", ondelete='CASCADE'), nullable=False)
@@ -61,6 +68,7 @@ class Area(Base):
     def __repr__(self):
         return f"{self.__class__.__name__}(Router: {self.ospf_process.router.router_name} | Process: {self.ospf_process.processid} | Area: {self.area_id})"
 class OSPFNetwork(Base):
+    """OSPF 网络宣告表"""
     __tablename__ = 'ospf_network'
     id = Column(Integer, primary_key=True)
     area_id = Column(Integer, ForeignKey("area.id", ondelete='CASCADE'), nullable=False)
@@ -70,6 +78,7 @@ class OSPFNetwork(Base):
     def __repr__(self):
         return f"{self.__class__.__name__}(Router: {self.area.ospf_process.router.router_name} | Process: {self.area.ospf_process.processid} | Area: {self.area.area_id} | Network: {self.network}/{self.wildmask})"
 class CPUUsage(Base):
+    """CPU 利用率记录表"""
     __tablename__ = 'cpu_usage'
     id = Column(Integer, primary_key=True)
     router_id = Column(Integer, ForeignKey("router.id", ondelete='CASCADE'), nullable=False)
@@ -79,4 +88,5 @@ class CPUUsage(Base):
     def __repr__(self):
         return f"{self.__class__.__name__}(Router: {self.router.router_name} | Datetime: {self.cpu_useage_datetime} | Percent: {self.cpu_useage_percent})"
 if __name__ == '__main__':
+    # 创建所有表（checkfirst=True 表示表已存在则跳过）
     Base.metadata.create_all(engine, checkfirst=True)

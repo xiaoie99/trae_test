@@ -2,6 +2,7 @@
 # -*- coding=utf-8 -*-
 from sqlalchemy.orm import sessionmaker
 from day7_1_create_db import Router, Interface, OSPFProcess, Area, OSPFNetwork, engine
+# 连接数据库并查询所有路由器及其关联数据
 Session = sessionmaker(bind=engine)
 session = Session()
 all_routers = session.query(Router).all()
