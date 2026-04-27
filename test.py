@@ -1,1 +1,0 @@
-print("p\n\ryt\nho\tn")
