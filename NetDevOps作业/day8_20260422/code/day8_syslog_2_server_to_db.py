@@ -8,6 +8,7 @@ from sqlalchemy.orm import sessionmaker
 from day8_syslog_1_create_db import Syslog, engine
 Session = sessionmaker(bind=engine)
 session = Session()
+# facility（设备模块）与编号对应关系
 facility_dict = {0: 'KERN',
                  1: 'USER',
                  2: 'MAIL',
@@ -28,6 +29,7 @@ facility_dict = {0: 'KERN',
                  21: 'LOCAL5',
                  22: 'LOCAL6',
                  23: 'LOCAL7'}
+# severity_level（严重级别）与名称对应关系
 severity_level_dict = {0: 'EMERG',
                        1: 'ALERT',
                        2: 'CRIT',
@@ -37,14 +39,15 @@ severity_level_dict = {0: 'EMERG',
                        6: 'INFO',
                        7: 'DEBUG'}
 class SyslogUDPHandler(socketserver.BaseRequestHandler):
+    """接收UDP Syslog数据，使用正则解析后写入SQLite数据库。"""
     def handle(self):
         data = bytes.decode(self.request[0].strip())
         print(data)
         syslog_info_dict = {'device_ip': self.client_address[0]}
         try:
-            # 完整 syslog 格式: <PRI>TIMESTAMP: %FACILITY-SEVERITY-MNEMONIC: message
+            # 完整格式: <PRI>TIMESTAMP: %FACILITY-SEVERITY-MNEMONIC: message
             syslog_info = re.match(r'^<(\d*)>(\d*): (?:\w+: )?[.*]?(.*): %(\w+)-(\d)-(\w+): (.*)', str(data)).groups()
-            syslog_info_dict['facility'] = int(syslog_info[0]) >> 3
+            syslog_info_dict['facility'] = int(syslog_info[0]) >> 3  # PRI 高5位为 facility
             syslog_info_dict['facility_name'] = facility_dict[int(syslog_info[0]) >> 3]
             syslog_info_dict['logid'] = int(syslog_info[1])
             syslog_info_dict['time'] = parser.parse(syslog_info[2])
@@ -54,19 +57,19 @@ class SyslogUDPHandler(socketserver.BaseRequestHandler):
             syslog_info_dict['description'] = syslog_info[5]
             syslog_info_dict['text'] = syslog_info[6]
         except AttributeError:
-            # 部分日志缺少 %FACILITY-SEVERITY，从 PRI 中提取 severity
+            # 部分日志缺失 %FACILITY-SEVERITY，改从 PRI 低3位提取 severity
             syslog_info = re.match(r'^<(\d*)>(\d*): (?:\w+: )?[.*]?(.*): (\w+): (.*)', str(data)).groups()
             syslog_info_dict['facility'] = int(syslog_info[0]) >> 3
             syslog_info_dict['facility_name'] = facility_dict[int(syslog_info[0]) >> 3]
             syslog_info_dict['logid'] = int(syslog_info[1])
             syslog_info_dict['time'] = parser.parse(syslog_info[2])
             syslog_info_dict['log_source'] = syslog_info[3]
-            syslog_info_dict['severity_level'] = int(syslog_info[0]) & 0b111
+            syslog_info_dict['severity_level'] = int(syslog_info[0]) & 0b111  # PRI 低3位为 severity
             syslog_info_dict['severity_level_name'] = severity_level_dict[(int(syslog_info[0]) & 0b111)]
             syslog_info_dict['description'] = 'N/A'
             syslog_info_dict['text'] = syslog_info[4]
         print(syslog_info_dict)
-        syslog_record = Syslog(**syslog_info_dict)
+        syslog_record = Syslog(**syslog_info_dict)  # 字典直接展开为 ORM 字段
         session.add(syslog_record)
         session.commit()
 if __name__ == "__main__":

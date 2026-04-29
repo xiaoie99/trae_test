@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# Netmiko SSH 配置工具函数（取自正课课件，适配协程调用）
 from netmiko import Netmiko
 def netmiko_config_cred(host, username, password, cmds_list, device_type='cisco_ios', verbose=False, ssh_port=22):
-    # 构造 Netmiko 连接字典
+    """通过 Netmiko SSH 登录设备并发送配置命令列表。"""
     device_info = {
         'host': host,
         'username': username,
         'password': password,
         'device_type': device_type,
-        # 按 IP 分文件，避免协程并发冲突
-        'session_log': 'session_' + host + '.log',
+        'session_log': 'session_' + host + '.log',  # 按 IP 分开日志，避免协程并发覆盖
         'port': ssh_port
     }
     try:

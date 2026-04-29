@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding=utf-8 -*-
+# 创建 PostgreSQL 路由器配置数据库表（ORM 定义）
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, String, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 import datetime
-# 东八区时区
 tzutc_8 = datetime.timezone(datetime.timedelta(hours=8))
-# 连接本机 PostgreSQL 容器
+# 连接本机 PostgreSQL 容器（端口映射到 5432）
 engine = create_engine('postgresql+psycopg2://qytangdbuser:Cisc0123@127.0.0.1/qytangdb')
 Base = declarative_base()
 class Router(Base):
@@ -88,5 +88,5 @@ class CPUUsage(Base):
     def __repr__(self):
         return f"{self.__class__.__name__}(Router: {self.router.router_name} | Datetime: {self.cpu_useage_datetime} | Percent: {self.cpu_useage_percent})"
 if __name__ == '__main__':
-    # 创建所有表（checkfirst=True 表示表已存在则跳过）
+    # 创建所有表（checkfirst=True 表已存在则跳过）
     Base.metadata.create_all(engine, checkfirst=True)

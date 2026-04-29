@@ -5,11 +5,13 @@ import pygal
 import os
 from pathlib import Path
 import cairosvg
+# 输出目录：当前文件上两级目录下的 outputs/
 OUTPUTS_DIR = Path(__file__).resolve().parent.parent / 'outputs'
 def pygal_pie(name_list, count_list, title, save_name=None):
+    """使用 Pygal 绘制交互式饼状图，并返回 PNG 路径用于邮件内嵌。"""
     from pygal.style import Style
     custom_style = Style(
-        font_family='Noto Sans CJK SC'
+        font_family='Noto Sans CJK SC'  # 中文字体，否则中文乱码
     )
     pie_chart = pygal.Pie(inner_radius=0.4, title=title, style=custom_style)
     for name, count in zip(name_list, count_list):
