@@ -6,7 +6,7 @@ import sys
 import uuid
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, CURRENT_DIR)
-from day9_1_model import Device, Session
+from day9_1_model import Device, Session  # noqa: E402
 TEST_DEVICES = [
     {
         'device_name': 'R1',

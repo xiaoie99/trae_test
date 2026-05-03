@@ -10,10 +10,10 @@ import uuid
 from dotenv import load_dotenv
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, CURRENT_DIR)
-from day9_1_model import ConfigBackup, Device, Session
-from tools.diff_config import diff_txt
-from tools.smtp_send_mail_attachment import qyt_smtp_attachment
-from tools.ssh_client_netmiko import netmiko_show_cred
+from day9_1_model import ConfigBackup, Device, Session  # noqa: E402
+from tools.diff_config import diff_txt  # noqa: E402
+from tools.smtp_send_mail_attachment import qyt_smtp_attachment  # noqa: E402
+from tools.ssh_client_netmiko import netmiko_show_cred  # noqa: E402
 SHOW_COMMAND = 'show run'
 def normalize_config(config_text):
     """提取 hostname 行及其以下的配置内容。"""
@@ -66,7 +66,8 @@ def send_diff_alert(device_obj, last_backup, current_config, mail_config):
     if not mail_config_ready(mail_config):
         print(f'[~] {device_obj.ip} 配置已变化, 但未配置 SMTP 环境变量, 跳过发信')
         return
-    diff_result = diff_txt(last_backup.config_text, current_config)
+    diff_raw = diff_txt(last_backup.config_text, current_config)
+    diff_result = os.linesep.join(line for line in diff_raw.splitlines() if line and not line.startswith('? '))
     subject = f'设备 {device_obj.device_name}({device_obj.ip}) 配置发生变化'
     qyt_smtp_attachment(
         mail_config['mailserver'],
