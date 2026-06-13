@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block title %}
+    乾颐堂设备信息查询
+{% endblock title %}
+{% block head %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/dataTables.dataTables.min.css" %}">
+{% endblock head %}
+{% block js %}
+    {% load static %}
+    <script src="{% static "js/jquery.min.js" %}"></script>
+    <script src="{% static "js/dataTables.min.js" %}"></script>
+{% endblock js %}
+{% block body %}
+<div class="container-fluid">
+    <br><h2 style="color: #666666">乾颐堂设备信息查询</h2><br>
+    {% if successmessage %}
+        <span class="message"><div class="alert alert-success" role="alert">{{ successmessage }}</div></span>
+    {% endif %}
+    {% if warningmessage %}
+        <span class="message"><div class="alert alert-warning" role="alert">{{ warningmessage}}</div></span>
+    {% endif %}
+    {% if errormessage %}
+        <span class="message"><div class="alert alert-danger" role="alert">{{ errormessage }}</div></span>
+    {% endif %}
+    <table class="table table-bordered" id="QYT_Table">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">唯一ID</th>
+          <th scope="col">设备名</th>
+          <th scope="col">IP地址</th>
+          <th scope="col">RO_Community</th>
+          <th scope="col">RW_Community</th>
+          <th scope="col">SSH用户名</th>
+          <th scope="col">SSH密码</th>
+          <th scope="col">Enable密码</th>
+          <th scope="col">设备类型</th>
+          <th scope="col">创建时间</th>
+          <th scope="col">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for device in devices_list %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{ device.id }}</td>
+          <td>{{ device.name | upper }}</td>
+          <td>{{ device.ip }}</td>
+          <td>{{ device.snmp_ro_community }}</td>
+          <td>{{ device.snmp_rw_community }}</td>
+          <td>{{ device.ssh_username }}</td>
+          <td>{{ device.ssh_password }}</td>
+          <td>{{ device.enable_password }}</td>
+          <td>{{ device.type }}</td>
+          <td>{{ device.create_datetime | date:'Y-m-d H:i' }}</td>
+          <td>
+            <form method="post" action="{{ device.id_delete }}" onsubmit="return confirmAct();" class="d-inline">
+              {% csrf_token %}
+              <button type="submit" data-bs-toggle="tooltip" data-bs-placement="top" title="删除此设备信息" class="badge bg-danger border-0">删除</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+</div>
+<script>
+$(document).ready(function () {
+    $('#QYT_Table').DataTable();
+});
+</script>
+<script>
+$(document).ready(function() {
+    var table = $('#QYT_Table').DataTable();
+    $('#QYT_Table tbody').on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        }
+        else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+    $('#button').click(function () {
+        table.row('.selected').remove().draw(false);
+    });
+});
+</script>
+<script type="text/javascript" language="javascript">
+function confirmAct() {
+    if (confirm('确定要执行此删除操作吗?')) {
+        return true;
+    }
+    return false;
+}
+</script>
+{% endblock body %}

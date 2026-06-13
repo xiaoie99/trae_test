@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}
+  乾颐堂图表(终极线形图)
+{% endblock title %}
+{% block head %}
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+{% endblock head %}
+{% block js %}
+  {% load static %}
+  <script src="{% static "js/echarts.min.js" %}"></script>
+  <script src="{% static "js/qytang_final_line.js" %}"></script>
+  <script src="{% static "js/jquery.min.js" %}"></script>
+{% endblock js %}
+{% block body %}
+  <div class="container">
+    <br>
+    <div class="card">
+      <div class="card-header"><strong style="color: rebeccapurple">终极线形图AJAX <button onClick="updatachart1();">刷新</button> </strong></div>
+      <div class="card-body">
+        <div id="chart1" style="width:1150px;height:600px;"></div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      get_json_render_echart_line_cpu_usage('/ajax/echarts_final_line_ajax_cpu_usage', 'chart1')
+    </script>
+    <script type="text/javascript">
+      function updatachart1() {
+        get_json_render_echart_line_cpu_usage('/ajax/echarts_final_line_ajax_cpu_usage', 'chart1');
+      }
+    </script>
+  </div>
+{% endblock body %}

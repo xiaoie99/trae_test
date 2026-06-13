@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+    <link rel="shortcut icon" href="{% static "img/favicon.ico" %}">
+    <title>{% block title %}{% endblock title %}</title>
+    <link href="{% static "css/bootstrap.min.css" %}" rel="stylesheet">
+    {% block head %}{% endblock head %}
+  </head>
+  <body>
+    {% block js %}{% endblock js %}
+    <script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+          <a href="/" class="float-left"><img src="{% static "img/logo_long_new.png" %}" height="50" width="auto"></a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link" href="/">首页</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  设备管理
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/add_device">添加设备</a></li>
+                  <li><a class="dropdown-item" href="/show_devices">查看设备</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  图表测试
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/multi_echarts">多图Echarts</a></li>
+                  <li><a class="dropdown-item" href="/echarts_final_line_cpu_usage">Echarts终极线形图(CPU利用率)</a></li>
+                  <li><a class="dropdown-item" href="/echarts_final_line_if_speed">Echarts终极线形图(接口速率)</a></li>
+                </ul>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">上传下载</a>
+              </li>
+            </ul>
+            <form class="d-flex me-3" role="search">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+              <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+            <ul class="navbar-nav align-items-center">
+              {% if user.is_authenticated %}
+              <li class="nav-item me-2">
+                <span class="btn btn-info btn-sm text-white">{{ user.username }}</span>
+              </li>
+              <li class="nav-item">
+                <a class="btn btn-secondary btn-sm" href="/accounts/logout/">登出</a>
+              </li>
+              {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="/accounts/login">登录</a>
+              </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      </nav>
+      {% block body %}{% endblock body %}
+  </body>
+</html>
