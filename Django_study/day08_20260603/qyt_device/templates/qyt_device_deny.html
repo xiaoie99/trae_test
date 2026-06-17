@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}
+    乾颐堂DJG内部系统
+{% endblock title %}
+{% block body %}
+    <div class="container">
+        <br>
+        {% if errormessage %}
+            <span class="message"><div class="alert alert-danger" role="alert">{{ errormessage }}</div></span>
+        {% endif %}
+    </div>
+{% endblock body %}

@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}
+  乾颐堂图标(echarts 数据源自于Django)
+{% endblock title %}
+{% block js %}
+  {% load static %}
+  <script src="{% static 'js/echarts.min.js' %}"></script>
+  <script src="{% static 'js/qytang_echarts_functions.js' %}"></script>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+{% endblock js %}
+{% block body %}
+  <div class="container-fluid">
+    <div class="jumbotron">
+      <h1 style="color: #666666">乾颐堂图表测试(Echarts)</h1>
+      <p>乾颐堂现任明教教主多图Echarts测试</p>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="card" style="height: 500px">
+          <div class="card-header">线性图表测试(静态数据)</div>
+          <div class="card-body" style="height: calc(100% - 56px);">
+            <div id="chart1" class="w-100" style="height: 100%; min-height: 400px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="card" style="height: 500px">
+          <div class="card-header">
+            柱状图表测试(Django数据 & AJAX数据)
+            <button onClick="updatachart2();">刷新</button>
+          </div>
+          <div class="card-body" style="height: calc(100% - 56px);">
+            <div id="chart2" class="w-100" style="height: 100%; min-height: 400px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      echarts_bar('chart1',
+                  'CPU利用率',
+                  ['2018-8-1', '2018-8-2', '2018-8-3', '2018-8-4', '2018-8-5', '2018-8-6'],
+                  [1, 20, 30, 10, 42, 66],
+                  'green');
+      echarts_compound("chart2",
+                       "{{ chart2_label }}",
+                       {{ chart2_legends|safe }},
+                       {{ chart2_time|safe }},
+                       {{ chart2_data|safe }});
+    </script>
+    <script type="text/javascript">
+      function updatachart2() {
+        ajax_render_echart('/ajax/chart2', "chart2");
+      }
+    </script>
+    <div class="row py-2">
+      <div class="col-md-4 py-1">
+        <div class="card">
+          <div class="card-header">饼状图表测试1(静态数据)</div>
+          <div class="card-body">
+            <div id="chDonut1" style="width:400px;height:400px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 py-1">
+        <div class="card">
+          <div class="card-header">饼状图表测试2(Django数据)</div>
+          <div class="card-body">
+            <div id="chDonut2" style="width:400px;height:400px;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 py-1">
+        <div class="card">
+          <div class="card-header">饼状图表测试3(AJAX数据) <button onClick="updatapie3();">刷新</button></div>
+          <div class="card-body">
+            <div id="chDonut3" style="width:400px;height:400px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      echarts_pie("chDonut1",
+                  "报名方向",
+                  ['安全', '数据中心'],
+                  [{value:20, name:'安全'}, {value:30, name:'数据中心'}]);
+      echarts_pie("chDonut2", {{ pie2_label|safe }}, {{ pie2_protocol|safe }}, {{ pie2_data|safe }});
+      ajax_render_pie('/ajax/pie3', "chDonut3")
+    </script>
+    <script type="text/javascript">
+      function updatapie3() {
+        ajax_render_pie('/ajax/pie3', "chDonut3");
+      }
+      function resize_charts() {
+        var chart1 = echarts.getInstanceByDom(document.getElementById('chart1'));
+        if (chart1) chart1.resize();
+        var chart2 = echarts.getInstanceByDom(document.getElementById('chart2'));
+        if (chart2) chart2.resize();
+        var chDonut1 = echarts.getInstanceByDom(document.getElementById('chDonut1'));
+        if (chDonut1) chDonut1.resize();
+        var chDonut2 = echarts.getInstanceByDom(document.getElementById('chDonut2'));
+        if (chDonut2) chDonut2.resize();
+        var chDonut3 = echarts.getInstanceByDom(document.getElementById('chDonut3'));
+        if (chDonut3) chDonut3.resize();
+      }
+      window.addEventListener('resize', resize_charts);
+    </script>
+  </div>
+{% endblock body %}
